@@ -9,7 +9,7 @@ import VideoOff from "../../assests/video-off.svg";
 // import Profile from "../../assests/profile.svg";
 import Msg_Illus from "../../assests/msg_illus.svg";
 import Msg from "../../assests/msg.svg";
-import ScreenShare from "../../assests/share_screen.svg";
+import ScreenShare from '../../assests/share_screen.svg'
 import { UserOutlined, MessageOutlined } from "@ant-design/icons";
 
 import { socket } from "../../context/VideoState";
@@ -17,39 +17,34 @@ import { socket } from "../../context/VideoState";
 // const socket = io()
 const { Search } = Input;
 const Video = () => {
-  const VideoComponent = () => {
-    const VideoContext = useContext(VideoContext); // Replace with the correct VideoContext import
-
-    // Destructure the values from the VideoContext
-    const {
-      call,
-      callAccepted,
-      myVideo,
-      userVideo,
-      stream,
-      name,
-      setName,
-      callEnded,
-      me,
-      callUser,
-      leaveCall,
-      answerCall,
-      sendMsg: sendMsgFunc,
-      msgRcv,
-      chat,
-      setChat,
-      userName,
-      myVdoStatus,
-      screenShare,
-      fullScreen,
-      handleScreenSharing,
-      userVdoStatus,
-      updateVideo,
-      myMicStatus,
-      userMicStatus,
-      updateMic,
-    } = VideoContext || {};
-  };
+  const {
+    call,
+    callAccepted,
+    myVideo,
+    userVideo,
+    stream,
+    name,
+    setName,
+    callEnded,
+    me,
+    callUser,
+    leaveCall,
+    answerCall,
+    sendMsg: sendMsgFunc,
+    msgRcv,
+    chat,
+    setChat,
+    userName,
+    myVdoStatus,
+    screenShare,
+    fullScreen,
+    handleScreenSharing,
+    userVdoStatus,
+    updateVideo,
+    myMicStatus,
+    userMicStatus,
+    updateMic,
+  } = useContext(VideoContext);
 
   const [sendMsg, setSendMsg] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -189,7 +184,7 @@ const Video = () => {
             {callAccepted && !callEnded && (
               <div
                 className="icons"
-                onClick={() => handleScreenSharing()}
+                onClick={() => handleScreenSharing()} 
                 tabIndex="0"
               >
                 <img src={ScreenShare} alt="share screen" />
@@ -222,7 +217,7 @@ const Video = () => {
           <div className="video-avatar-container">
             <video
               playsInline
-              ref={userVideo}
+              ref={userVideo}             
               onClick={fullScreen}
               autoPlay
               className="video-active"

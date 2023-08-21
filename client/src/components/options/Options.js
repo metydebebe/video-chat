@@ -23,36 +23,36 @@ import {
 } from "@ant-design/icons";
 import { socket } from "../../context/VideoState";
 
-const Options: React.FC = () => {
-  const [idToCall, setIdToCall] = useState<string>("");
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const Audio = useRef<HTMLAudioElement>(null);
-  const call: any,
-  const callAccepted: any,
-  const myVideo: any,
-  const userVideo: any,
-  const stream: any,
-  const name: any,
-  const setName: any,
-  const  callEnded: any,
-  const me: any,
-  const callUser: any,
-  const leaveCall: any,
-  const answerCall: any,
-  const otherUser: any,
-  const setOtherUser: any,
-  const leaveCall1:any,
-  }; = useContext(VideoContext);
+const Options = () => {
+  const [idToCall, setIdToCall] = useState("");
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const Audio = useRef();
+  const {
+    call,
+    callAccepted,
+    myVideo,
+    userVideo,
+    stream,
+    name,
+    setName,
+    callEnded,
+    me,
+    callUser,
+    leaveCall,
+    answerCall,
+    otherUser,
+    setOtherUser,
+    leaveCall1,
+  } = useContext(VideoContext);
 
   useEffect(() => {
     if (isModalVisible) {
-      Audio.current?.play();
-    } else {
-      Audio.current?.pause();
-    }
+      Audio?.current?.play();
+    } else Audio?.current?.pause();
   }, [isModalVisible]);
 
-  const showModal = (showVal: boolean) => {
+  const showModal = (showVal) => {
     setIsModalVisible(showVal);
   };
 
@@ -65,9 +65,7 @@ const Options: React.FC = () => {
     if (call.isReceivingCall && !callAccepted) {
       setIsModalVisible(true);
       setOtherUser(call.from);
-    } else {
-      setIsModalVisible(false);
-    }
+    } else setIsModalVisible(false);
   }, [call.isReceivingCall]);
 
   return (
@@ -94,7 +92,7 @@ const Options: React.FC = () => {
               type="primary"
               icon={<CopyOutlined />}
               className={classes.btn}
-              tabIndex={0}
+              tabIndex="0"
               onClick={() => message.success("Code copied successfully!")}
             >
               Copy code
@@ -112,14 +110,14 @@ const Options: React.FC = () => {
             </WhatsappShareButton>
             <FacebookShareButton
               url={`https://video-chat-mihir.vercel.app/`}
-              quote={`Join this meeting with the given code "${me}"\n`}
+              title={`Join this meeting with the given code "${me}"\n`}
               className={classes.share_icon}
             >
               <FacebookIcon size={26} round />
             </FacebookShareButton>
             <TwitterShareButton
               url={`https://video-chat-mihir.vercel.app/`}
-              title={`Join this meeting with the given code "${me}"\n`}
+              title={`Join this meeting with the given code  "${me}"\n`}
               className={classes.share_icon}
             >
               <TwitterIcon size={26} round className={classes.share_border} />
@@ -147,21 +145,24 @@ const Options: React.FC = () => {
 
         {callAccepted && !callEnded ? (
           <Button
-            type="primary"
-            danger
-            icon={<PhoneOutlined />}
+            variant="contained"
             onClick={leaveCall}
-            className={classes.btn}
+            className={classes.hang}
+            tabIndex="0"
           >
-            Hang Up
+            <img src={Hang} alt="hang up" style={{ height: "15px" }} />
+            &nbsp; Hang up
           </Button>
         ) : (
           <Button
             type="primary"
             icon={<PhoneOutlined />}
-            size="large"
-            onClick={() => callUser(idToCall)}
+            onClick={() => {
+              if (name.length) callUser(idToCall);
+              else message.error("Please enter your name to call!");
+            }}
             className={classes.btn}
+            tabIndex="0"
           >
             Call
           </Button>
@@ -169,29 +170,58 @@ const Options: React.FC = () => {
       </div>
 
       {call.isReceivingCall && !callAccepted && (
-        <Modal
-          title="Incoming Call"
-          visible={isModalVisible}
-          onCancel={handleCancel}
-          footer={[
-            <Button key="hangup" type="primary" danger onClick={handleCancel}>
-              Hang Up
-            </Button>,
-            <Button
-              key="answer"
-              type="primary"
-              icon={<PhoneOutlined />}
-              onClick={answerCall}
-            >
-              Answer
-            </Button>,
-          ]}
-        >
-          <h1>{otherUser} is calling you</h1>
-        </Modal>
+        <>
+          <audio src={Teams} loop ref={Audio} />
+          <Modal
+            title="Incoming Call"
+            visible={isModalVisible}
+            onOk={() => showModal(false)}
+            onCancel={handleCancel}
+            footer={null}
+          >
+            <div style={{ display: "flex", justifyContent: "space-around" }}>
+              <h1>
+                {call.name} is calling you:{" "}
+                <img
+                  src={Phone}
+                  alt="phone ringing"
+                  className={classes.phone}
+                  style={{ display: "inline-block" }}
+                />
+              </h1>
+            </div>
+            <div className={classes.btnDiv}>
+              <Button
+                variant="contained"
+                className={classes.answer}
+                color="#29bb89"
+                icon={<PhoneOutlined />}
+                onClick={() => {
+                  answerCall();
+                  Audio.current.pause();
+                }}
+                tabIndex="0"
+              >
+                Answer
+              </Button>
+              <Button
+                variant="contained"
+                className={classes.decline}
+                icon={<PhoneOutlined />}
+                onClick={() => {
+                  setIsModalVisible(false);
+                  Audio.current.pause();
+                }}
+                tabIndex="0"
+              >
+                Decline
+              </Button>
+            </div>
+          </Modal>
+        </>
       )}
     </div>
   );
-
+};
 
 export default Options;
