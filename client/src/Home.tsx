@@ -27,7 +27,7 @@ const Home: React.FC = () => {
       <div className="App" style={{ height: "100%", width: "100%" }}>
         <Video />
         <Options />
-        {/* <Footer /> */}
+        <Footer />
       </div>
     </VideoState>
   );
